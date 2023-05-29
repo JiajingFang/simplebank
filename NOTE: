@@ -89,3 +89,10 @@ then all the sql queries written in golang is available
 
 
 write golang unit tests for database CRUD with random data
+
+
+github:
+git status
+git add .
+git commit -m "init ci workflow"
+git push origin master
