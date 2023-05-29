@@ -1,0 +1,91 @@
+NOTE:
+
+docker ps
+
+docker images
+
+docker rmi <name:tag>
+
+docker pull postgres:12-alpine
+
+docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-apline
+
+docker exec -it postgres12 psql -U root
+
+(
+select now();
+
+\q
+)
+
+docker logs postgres12
+
+docker stop postgres12
+
+docker start postgres12
+
+(docker ps -a)
+
+
+
+data migration
+
+migration -help
+
+migrate create -ext sql -dir db/migration -seq init_schema
+
+docker exec -it postgres12 /bin/sh
+
+inside the postgres container shell:::
+
+createdb --username=root --owner=root simple_bank
+
+psql simple_bank(access its console)
+\q (quit the console)
+dropdb simple_bank (delete the database)
+
+exit(get out the container shell)
+
+to sum up we can use docker command to create database:
+docker exec -it postgres12 createdb --username=root --owner=root simple_bank
+docker exec -it postgres12 psql -U root simple_bank
+
+for the Makefile:
+postgres:
+	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+
+createdb:
+	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
+
+dropdb:
+	docker exec -it postgres12 dropdb simple_bank
+.PHONY: postgres createdb dropdb
+
+
+search a previous commond:
+history | grep "docker run"
+
+
+docker rm postgres12 (remove a container)
+
+we can simply run a new container:
+make postgres
+make createdb
+
+migration:
+migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up  
+
+CRUD for database from sql to golang: 1/ database/sql  2/GORM 3/SQLX 4/SQLC
+1. sqlc init (create a sql.yaml)
+
+
+go mod init github.com/jiajingfang/simplebank
+go mod tidy
+
+2. write all sql query in query folder
+3. sql generate
+then all the sql queries written in golang is available
+
+
+
+write golang unit tests for database CRUD with random data
