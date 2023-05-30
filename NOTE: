@@ -96,3 +96,6 @@ git status
 git add .
 git commit -m "init ci workflow"
 git push origin master
+git checkout -b newb (create a branch called newb based on current brand)
+git checkout newb
+git branch
