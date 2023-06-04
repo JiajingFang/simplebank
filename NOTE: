@@ -99,3 +99,31 @@ git push origin master
 git checkout -b newb (create a branch called newb based on current brand)
 git checkout newb
 git branch
+
+docker build:
+FROM golang:1.19-alpine3.16 AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o main main.go
+
+
+EXPOSE 8080
+CMD [ "/app/main" ]
+
+
+docker: before we get image from docker online(docker pull) then just run it now we try to deploy
+our own image(docker build)
+docker build -t simplebank:latest .
+
+docker container inspect simplebank
+docker network inspect bridge
+docker network create banknetwork
+docker network connect banknetwork postgres12
+docker run --name simplebank --network banknetwork -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
+
+
+combine all docker container in one file (docker compose)
+docker compose up
+-> create two container: simplebank_postgres  simplebank_api
+docker compose down
+docker rmi imagename
