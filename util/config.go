@@ -9,7 +9,7 @@ import (
 type Config struct {
 	DBDriver      string `mapstructure:"DB_DRIVER"`
 	DBSource      string `mapstructure:"DB_SOURCE"`
-	serverAddress string `mapstructure:"SERVER_ADDRESS"`
+	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
 }
 
 // LoadConfig reads configuration from file or environment variables.
